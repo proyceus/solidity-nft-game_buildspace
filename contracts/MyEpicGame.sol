@@ -11,6 +11,8 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 
 import "hardhat/console.sol";
 
+import "./libraries/Base64.sol";
+
 contract MyEpicGame is ERC721 {
     //hold the character's attributes in a struct
     struct CharacterAttributes {
