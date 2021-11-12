@@ -126,27 +126,58 @@ contract MyEpicGame is ERC721 {
         string memory strMaxHp = Strings.toString(charAttributes.maxHp);
         string memory strAttackDamage = Strings.toString(charAttributes.attackDamage);
 
-        string memory json = Base64.encode(
-            bytes(
-                string(
-                    abi.encodePacked(
-                        '{"name": "',
-                        charAttributes.name,
-                        ' -- nFT #: ',
-                        Strings.toString(_tokenId),
-                        '", "description": "This is an NFT that lets people play in the game Metaverse Slayer!", "image": "',
-                        charAttributes.imageURI,
-                        '", "attributes": [ { "trait type": "Health Points", "value": ', strHp, ', "max_value":', strMaxHp,'}, { "trait type": "Attack Damage", "value": ',
-                        strAttackDamage,'} ]}'
-                    )
-                )
-            )
-        );
+         string memory json = Base64.encode(
+    bytes(
+      string(
+        abi.encodePacked(
+          '{"name": "',
+          charAttributes.name,
+          ' -- NFT #: ',
+          Strings.toString(_tokenId),
+          '", "description": "This is an NFT that lets people play in the game Metaverse Slayer!", "image": "',
+          charAttributes.imageURI,
+          '", "attributes": [ { "trait_type": "Health Points", "value": ',strHp,', "max_value":',strMaxHp,'}, { "trait_type": "Attack Damage", "value": ',
+          strAttackDamage,'} ]}'
+        )
+      )
+    )
+  );
 
         string memory output = string(
             abi.encodePacked("data:application/json;base64,", json)
         );
 
         return output;
+    }
+
+    function attackBoss() public {
+        //get state of the player's NFT
+        uint256 nftTokenIdOfPlayer = nftHolders[msg.sender];
+        CharacterAttributes storage player = nftHolderAttributes[nftTokenIdOfPlayer];
+        console.log("\nPlayer w/ character %s about to attack. Has %s HP and %s AD", player.name, player.hp, player.attackDamage);
+        console.log("Boss %s has %s HP and %s AD", bigBoss.name, bigBoss.hp, bigBoss.attackDamage);
+
+        //make sure player has more than 0 hp
+        require(player.hp > 0, "Error: character must have HP to attack boss");
+
+        //make sure the boss has more than 0 hp
+        require(bigBoss.hp > 0, "Error: boss must have HP to attack boss");
+
+        //allow player to attack boss
+        if (bigBoss.hp < player.attackDamage) {
+            bigBoss.hp = 0;
+        } else {
+            bigBoss.hp = bigBoss.hp - player.attackDamage;
+        }
+
+        //allow boss to attack player
+        if (player.hp < bigBoss.attackDamage) {
+            player.hp = 0;
+        } else {
+            player.hp = player.hp - bigBoss.attackDamage;
+        }
+
+        console.log("Player attacked boss. New boss hp: %s", bigBoss.hp);
+        console.log("Boss attacked player. New player hp: %s\n", player.hp);
     }
 }
