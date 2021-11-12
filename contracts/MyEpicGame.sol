@@ -35,6 +35,17 @@ contract MyEpicGame is ERC721 {
     //create a mapping from the NFT's tokenId => that NFTs attributes
     mapping(uint256 => CharacterAttributes) public nftHolderAttributes;
 
+    //create Boss struct
+    struct BigBoss {
+        string name;
+        string imageURI;
+        uint hp;
+        uint maxHp;
+        uint attackDamage;
+    }
+
+    BigBoss public bigBoss;
+
     //create a mapping to track the address and tokenId
     mapping(address => uint256) public nftHolders;
 
@@ -43,10 +54,26 @@ contract MyEpicGame is ERC721 {
         string[] memory characterNames,
         string[] memory characterImageURIs,
         uint[] memory characterHp,
-        uint[] memory characterAttackDmg
+        uint[] memory characterAttackDmg,
+        string memory bossName,
+        string memory bossImageURI,
+        uint bossHp,
+        uint bossAttackDamage
     )
       ERC721("RoxPapesSciss", "RPS")
     {
+
+        //initialize the boss and save it to state variable
+        bigBoss = BigBoss({
+            name: bossName,
+            imageURI: bossImageURI,
+            hp: bossHp,
+            maxHp: bossHp,
+            attackDamage: bossAttackDamage
+        });
+
+        console.log("Done initializing boss %s w/ HP %s, img %s", bigBoss.name, bigBoss.hp, bigBoss.imageURI);
+
         //loop through characters and save values to use later when NFTs are minted
         for (uint i = 0; i < characterNames.length; i += 1) {
             defaultCharacters.push(CharacterAttributes({
