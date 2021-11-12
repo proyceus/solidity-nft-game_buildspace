@@ -4,7 +4,11 @@ const main = async () => {
         ["Rock", "Paper", "Scissor"], //Names
         ["https://i.imgur.com/vxlMoGz.png", "https://i.imgur.com/5rE9zeh.png", "https://i.imgur.com/zZSMKK6.png"], //images
         [200, 300, 75], //hp values
-        [50, 25, 150] //atk values
+        [50, 25, 150], //atk values
+        "Hand Man", //boss name
+        "http://clipart-library.com/images/rcjr56Lzi.jpg", //boss image
+        10000,
+        50
     );
     await gameContract.deployed();
     console.log("Contract deployed to:", gameContract.address);
